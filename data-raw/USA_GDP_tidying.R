@@ -1,5 +1,4 @@
-# library
-library(usethis)
+#' @importFrom usethis use_data
 
 # import data (from local .csv file)
 USA_Annual_GDP <- read.csv("USA_GDP_Annual.csv")
