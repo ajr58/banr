@@ -1,8 +1,4 @@
-# library
-library(usethis)
-library(tidyverse)
-library(dplyr)
-require(plotly)
+#' @importFrom usethis use_data
 
 # import data
 races <- read_csv("data/races.csv")
