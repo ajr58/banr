@@ -4,7 +4,7 @@ library(tidyverse)
 library(dplyr)
 require(plotly)
 
-# import data (from local .csv file)
+# import data
 races <- read_csv("data/races.csv")
 status <- read_csv("data/status.csv")
 results <- read_csv("data/results.csv", col_types = cols(number = col_character()))
