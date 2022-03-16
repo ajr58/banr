@@ -1,17 +1,15 @@
-# library
-library(usethis)
-library(tidyverse)
-library(dplyr)
-require(plotly)
+#' @importFrom usethis use_data
+#' @importFrom dplyr left_join
+#'
 
 # import data
-races <- read_csv("data/races.csv")
-status <- read_csv("data/status.csv")
-results <- read_csv("data/results.csv", col_types = cols(number = col_character()))
+races <- read.csv("races.csv")
+status <- read.csv("status.csv")
+results <- read.csv("results.csv", col_types = cols(number = col_character()))
 
 # join datasets
-F1racing <- left_join(status, results, by='statusId') %>%
-  left_join(races, results, by='raceId')
+F1racing <- dplyr::left_join(status, results, by='statusId') %>%
+  dplyr::left_join(races, results, by='raceId')
 
 # wrangle data
 status_data <- F1racing %>%
