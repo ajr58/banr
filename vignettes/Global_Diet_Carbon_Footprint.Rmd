@@ -1,0 +1,280 @@
+---
+title: "Global Diet Carbon Footprint"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Global Diet Carbon Footprint}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggridges)
+library(plotly)
+library(readxl)
+library(readr)
+```
+
+```{r, include=FALSE}
+# Read in Data
+food_consumption <- read_csv("~/DATA-303/banr/data-raw/food_consumption.csv")
+```
+
+
+```{r, include=FALSE}
+# Data Wrangling
+
+food_consumption_total <- food_consumption %>%
+  group_by(food_category) %>%
+  summarize(total_consumption = sum(consumption),
+            total_emission = sum(co2_emmission)) %>%
+  mutate(food_type = case_when(food_category == "Pork" ~ "Animal Product",
+                               food_category == "Poultry" ~ "Animal Product",
+                               food_category == "Beef" ~ "Animal Product",
+                               food_category == "Fish" ~ "Animal Product",
+                               food_category == "Eggs" ~ "Animal Product",
+                               food_category == "Milk - inc. cheese" ~ "Animal Product",
+                               food_category == "Lamb & Goat" ~ "Animal Product",
+                               TRUE ~ "Non-Animal Product")) %>%
+  mutate(food_category = case_when(food_category == "Milk - inc. cheese" ~ "Dairy",
+                                   food_category == "Nuts inc. Peanut Butter" ~ "Nuts",
+                                   food_category == "Wheat and Wheat Products" ~ "Wheat",
+                                   TRUE ~ food_category)) %>%
+  arrange(desc(food_type), total_consumption)
+
+food_consumption_grouped <- food_consumption_total %>%
+  group_by(food_type) %>%
+  summarize(total_consumption = sum(total_consumption),
+            total_emission = sum(total_emission)) %>%
+  mutate(perc_consumption = (total_consumption / sum(total_consumption)) * 100,
+         perc_emission = (total_emission / sum(total_emission)) * 100,
+         "% of Total" = "")
+
+food_consumption_grouped
+```
+
+```{r warning=FALSE, include=FALSE}
+# Visualization
+
+fig1 <- plot_ly(food_consumption_total,
+        y = ~ food_category,
+        x = ~ total_consumption,
+        color = ~food_type,
+        label = ~food_type,
+        hovertemplate = paste('<b>Food Category</b>: %{y}<br>',
+                        '<b>Consumption</b>: %{x:.2f}<br>')) %>%
+  add_bars() %>%
+  layout(yaxis = list(categoryorder = "array",
+                      categoryarray = food_consumption_total$food_category,
+                      title = ""),
+         xaxis = list(title = "Consumption (in kg/person/year)"))
+
+fig2 <- plot_ly(food_consumption_total,
+        y = ~ food_category,
+        x = ~ total_emission,
+        color = ~food_type,
+        showlegend = FALSE,
+        hovertemplate = paste('<b>Food Category</b>: %{y}<br>',
+                        '<b>Consumption</b>: %{x:.2f}<br>')) %>%
+  add_bars() %>%
+  layout(title = "Emission",
+         yaxis = list(categoryorder = "array",
+                      categoryarray = food_consumption_total$food_category),
+         xaxis = list(title = "Consumption (in kg/person/year)"))
+
+fig2solo <- plot_ly(food_consumption_total,
+        y = ~ food_category,
+        x = ~ total_emission,
+        color = ~food_type,
+        hovertemplate = paste('<b>Food Category</b>: %{y}<br>',
+                        '<b>Consumption</b>: %{x:.2f}<br>')) %>%
+  add_bars() %>%
+  layout(title = "Emission",
+         yaxis = list(categoryorder = "array",
+                      categoryarray = food_consumption_total$food_category,
+                      title = ""),
+         xaxis = list(title = "Consumption (in kg/person/year)"))
+
+fig3 <- plot_ly(food_consumption_grouped,
+        x = ~ perc_consumption,
+        y = ~ `% of Total`,
+        color = ~ food_type,
+        hovertemplate = paste('<b>% of Total Consumption</b>: %{x:.2f}%<br>'),
+        showlegend = FALSE) %>%
+  add_bars() %>%
+  layout(barmode = "stack",
+         yaxis = list(visible =  FALSE,
+                      showticklabels =  FALSE),
+         xaxis = list(hoverformat = ".2f"))
+
+fig4 <- plot_ly(food_consumption_grouped,
+        x = ~ perc_emission,
+        y = ~ `% of Total`,
+        color = ~ food_type,
+        hovertemplate = paste('<b>% of Total Emission</b>: %{x:.2f}%<br>'),
+        showlegend = FALSE) %>%
+  add_bars() %>%
+  layout(barmode = "stack",
+         yaxis = list(visible =  FALSE,
+                      showticklabels =  FALSE),
+         xaxis = list(hoverformat = ".2f"))
+```
+
+```{r, include=FALSE}
+# Annotations
+
+annotations = list( 
+  list( 
+    x = 0.22,  
+    y = 1.02,  
+    text = "Global Consumption (in kg/person/year)",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.2,  
+    y = 0.1,  
+    text = "% of Total Food Consumption",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),
+  list( 
+    x = 0.86,  
+    y = 1.02,  
+    text = "Global CO2 Emission (in kg/person/year)",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.8,  
+    y = 0.1,  
+    text = "% of Total Food Emission",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ))
+
+annotations1 = list( 
+  list( 
+    x = 0.45,  
+    y = 1.02,  
+    text = "Global Consumption (in kg/person/year)",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.45,  
+    y = 0.1,  
+    text = "% of Total Food Consumption",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ))
+
+annotations2 = list( 
+  list( 
+    x = 0.45,  
+    y = 1.02,  
+    text = "Global CO2 Emission (in kg/person/year)",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.45,  
+    y = 0.1,  
+    text = "% of Total Food Emission",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ))
+```
+
+## Background and Data
+
+### Background:
+
+A 2018 study done by the Food and Agriculture Organization of the United Nations (FAO) collected food consumption and CO2 emission data for 130 countries around the world. The purpose was to determine how much carbon dioxide each country emits based on their diets. A secondary purpose was to illustrate the differences between the carbon dioxide emissions of animal products and non-animal products. I attempt to visualize this second goal.
+
+### Data Source:
+
+The original data is from the 2018 Food Carbon Footprint Index study done by the Food and Agriculture Organization of the United Nations (FAO). This original data and description of the study can be found [here]("https://www.nu3.de/blogs/nutrition/food-carbon-footprint-index-2018").
+
+The data was stored in a poorly designed survey on the webpage and webscraped by Kasia Kulma. Her process can be found [here]("https://r-tastic.co.uk/post/from-messy-to-tidy/").
+
+I found the data through Thomas Mock's Tidy Tuesday project, which submits a new data set of interest every Tuesday to explore. The particular dataset for my data is [here]("https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-02-18/readme.md").
+  
+  
+## Visualizations
+
+### Global Consumption
+    
+```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
+subplot(fig1, fig3, nrows = 2,
+        shareY = TRUE,
+        heights = c(0.85, 0.15),
+        margin = 0.09) %>%
+  layout(title = "Global Consumption of Food by Category",
+         annotations = annotations1,
+         margin = list(t = 80))
+```
+   
+### Global Emission
+
+```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
+subplot(fig2solo, fig4, nrows = 2,
+        shareY = TRUE,
+        heights = c(0.85, 0.15),
+        margin = 0.09) %>%
+  layout(title = "Global Emission of CO2 by Food Category",
+         annotations = annotations2,
+         margin = list(t = 80))
+```   
+ 
+### Overal Visualization
+    
+```{r echo=FALSE, warning=FALSE, fig.width = 8, fig.height = 6}
+subplot(fig1, fig2, fig3, fig4, nrows = 2,
+        shareY = TRUE,
+        heights = c(0.85, 0.15),
+        margin = 0.09) %>%
+  layout(title = "The Disproportionate Carbon Footprint of Animal Products",
+         annotations = annotations,
+         margin = list(t = 80))
+```
+
+## Reflection
+
+### Project Reflection:
+
+I was particularly inspired by Chapter 10 of Claus Wilke's textbook, in which he explains best practice for visualizing proportions. I found that showing the food categories as individual bars allowed for the best comparison between the categories, whereas a pie chart or stacked bar chart would not have made it as easy. For the total consumption and emission graphs, I chose to make horizontal stacked bars. This is since only having two categories allows for easy comparison and does not obscure the actual length of each group based on where it is on the stacked bar. I also tried to follow as many of his Part 2 principles as possible, such as following the principle of proportional ink (having the actual data be what is most darkly colored), avoiding line drawing by filling in all the bars, and not overdoing labels and titles (I did not label the legend, since it was relatively self-explanatory). Finally, I worked hard to tell a story through this visualization. I attempted to introduce the data with the upper-left visualization, then develop the issue through the upper-right hand visual. The bottom stacked bars really drive it home and complement the upper visuals nicely.
+
+Technically, I experienced a very large learning curve with plotly. I had a hard time finding any documentation or help online to answer a lot of the aesthetic questions I had about my visualization. I had to undergo many hours of trial and error to fix even one small aspect of my visual, and there are still things I am not satisfied with about my visual. For example, I was not able to figure out how to customize the tooltips. I also would have liked to include value labels in all the bars and the stacked bars to allow for easier data analysis. However, I could not figure out these processes as hard as I tried. My overall opinion is that plotly is not worth the hassle.
