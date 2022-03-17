@@ -1,10 +1,13 @@
 Package: banr
-Title: What the Package Does (One Line, Title Case)
+Title: Practice Package For DATA-303
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(person(given = "Adam", family = "Ritsema", email = "ajr58@calvin.edu", role = c("aut", "cre")),
+      person(given = "Brea", family = "Koenes", email = "bjk47@calvin.edu", role = c("ctb")),
+      person(given = "Nick", family = "Beery", email = "nwb4@calvin.edu", role = c("ctb")))
+Description: A practice R Package for DATA-303 written by Nick Beery, Brea Koenes, and Adam Ritsema.
+             The package contains a utility function to apply any function to the columns of a data frame
+             as well as various data sets and projects (as vignettes) from our DATA-303 class.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -16,5 +19,7 @@ Imports:
     tibble
 Suggests: 
     rmarkdown,
-    knitr
+    knitr,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
