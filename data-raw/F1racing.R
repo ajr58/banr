@@ -11,7 +11,7 @@ F1racing <- left_join(status, results, by='statusId') %>%
   left_join(races, results, by='raceId')
 
 # wrangle data
-status_data <- F1racing %>%
+F1racing <- F1racing %>%
   mutate(status = if_else((status == "Accident") |
                             (status == "Mechanical"),
                           "Accident/Mechanical",
@@ -22,5 +22,4 @@ status_data <- F1racing %>%
   summarise(status_sum = n())
 
 # add to package
-usethis::use_data(F1racing)
-usethis::use_data(status_data)
+usethis::use_data(F1racing, overwrite = TRUE)

@@ -23,7 +23,7 @@ library(banr)
 ```
 
 ```{r load-data, include=FALSE}
-races <- banr::F1racing
+status_data <- banr::F1racing
 ```
 
 ## Dataset context
@@ -65,22 +65,5 @@ What ideas/suggestions from Claus Wilke’s helped shape your visualization? Cla
 Is there anything more you wish you could do with this data? I think that it would be interesting to see what lap of the race has the most accidents/mechanical failures. 
 
 What were the most interesting or frustrating technical aspects of doing this? A key was not generated when I made the line plot. I thought it was odd that no labels for the lines were generated either. I had to do it manually.
-
-## Revisions
-```{r}
-new_data <- joined_results %>%
-  filter(status == "Mechanical" | status == "Accident" | status == "Engine" | status == "Brakes") %>%  # Filter by categories
-  group_by(status, year)
-```
-
-```{r}
-plot_ly(new_data, 
-               x = ~status, 
-               y = ~laps, 
-               type = 'box') %>% 
-  layout(title = "Spread of Failures over F1 Racing Laps",
-         xaxis = list(title = "Race status"),
-         yaxis = list (title = "Number of Laps"))
-```
 
 For my revision, I wanted to explore more details about when the failures occur. Also, I liked how Plotly's boxplots display information about each quartile of the boxplot. Hence, I made the revised plot above. 
