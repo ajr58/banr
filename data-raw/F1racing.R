@@ -23,3 +23,4 @@ status_data <- F1racing %>%
 
 # add to package
 usethis::use_data(F1racing)
+usethis::use_data(status_data)
