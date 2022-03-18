@@ -2,7 +2,7 @@
 title: "F1 Racing"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Global Diet Carbon Footprint}
+  %\VignetteIndexEntry{F1racing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,30 +18,12 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
-require(plotly)
+library(plotly)
+library(banr)
 ```
 
 ```{r load-data, include=FALSE}
-races <- read_csv("~/R/data303/banr/data-raw/races.csv")
-status <- read_csv("~/R/data303/banr/data-raw/status.csv")
-results <- read_csv("~/R/data303/banr/data-raw/results.csv", col_types = cols(number = col_character()))
-```
-
-```{r join datasets, include=FALSE}
-joined_results <- left_join(status, results, by='statusId') %>%
-                left_join(races, results, by='raceId')
-```
-
-```{r Wrangling, include=FALSE}
-status_data <- joined_results %>%
-  mutate(status = if_else((status == "Accident") |
-                          (status == "Mechanical"),
-                          "Accident/Mechanical",
-                          status)) %>%                  # Mutate new a new category
-  filter(status == "Accident/Mechanical" |
-         status == "Finished") %>%                      # Filter 2 categories
-  group_by(status, year) %>% 
-  summarise(status_sum = n())
+races <- banr::F1racing
 ```
 
 ## Dataset context
