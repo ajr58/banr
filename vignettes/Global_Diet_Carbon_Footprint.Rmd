@@ -25,8 +25,6 @@ library(readr)
 ```
 
 ```{r, include=FALSE}
-# Read in Data
-food_consumption <- read_csv("~/DATA-303/banr/data-raw/food_consumption.csv")
 food_consumption <- banr::food_consumption
 ```
 
