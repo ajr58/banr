@@ -22,9 +22,9 @@ require(plotly)
 ```
 
 ```{r load-data, include=FALSE}
-races <- read_csv("races.csv")
-status <- read_csv("status.csv")
-results <- read_csv("results.csv", col_types = cols(number = col_character()))
+races <- read_csv("~/R/data303/banr/data-raw/races.csv")
+status <- read_csv("~/R/data303/banr/data-raw/status.csv")
+results <- read_csv("~/R/data303/banr/data-raw/results.csv", col_types = cols(number = col_character()))
 ```
 
 ```{r join datasets, include=FALSE}
