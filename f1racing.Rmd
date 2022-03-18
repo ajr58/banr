@@ -1,30 +1,104 @@
 ---
-title: "F1racing"
-author: "Brea Koenes"
-date: "3/18/2022"
-output: html_document
+title: "F1 Racing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Global Diet Carbon Footprint}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+require(plotly)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r load-data, include=FALSE}
+races <- read_csv("data-raw/races.csv")
+status <- read_csv("data-raw/status.csv")
+results <- read_csv("data-raw/results.csv", col_types = cols(number = col_character()))
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r join datasets, include=FALSE}
+joined_results <- left_join(status, results, by='statusId') %>%
+                left_join(races, results, by='raceId')
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r Wrangling, include=FALSE}
+status_data <- joined_results %>%
+  mutate(status = if_else((status == "Accident") |
+                          (status == "Mechanical"),
+                          "Accident/Mechanical",
+                          status)) %>%                  # Mutate new a new category
+  filter(status == "Accident/Mechanical" |
+         status == "Finished") %>%                      # Filter 2 categories
+  group_by(status, year) %>% 
+  summarise(status_sum = n())
+```
+
+## Dataset context
+The dataset came from (http://ergast.com/mrd/db/#csv). The data was compiled by Ergast Developer API, who provides a historical record of motor racing data for non-commercial purposes.
+
+I loaded in 3 csv files with the raw datasets. Each row represents an entry. There are `r nrow(races)` rows in "races," `r nrow(status)` rows in status, and `r nrow(results)` rows in results. The data that I use is the status, sum of statuses, and years. The statuses I look at are if the driver finished, had a mechanical failure, or an on-road accident.
+
+## Visualization 
+```{r Visual, echo=FALSE}
+fig <- plot_ly(status_data, 
+               x = ~year, 
+               y = ~status_sum, 
+               type = 'scatter', 
+               mode = 'lines+markers'
+               ) %>% 
+  add_annotations(
+  xref="paper",
+  yref="paper",
+  x=.83,
+  y=0.15,
+  text="Accidents/Mechanical Failures"
+  ) %>%
+  add_annotations(
+  xref="paper",
+  yref="paper",
+  x=0.93,
+  y=0.73,
+  text="Finished"
+  ) %>% 
+  layout(title = "Finished vs. Failure Results of F1 Race Entries",
+         xaxis = list(title = "Year"),
+         yaxis = list (title = "Race Entries"))
+fig
+```
+
+## Reflection
+What ideas/suggestions from Claus Wilke’s helped shape your visualization? Claus' ideas about labeling axis/legends helped me choose to put my labels next to my lines instead of having an answer key. Also, Claus' direction on when to use color helped my decisions with color. I chose not to distinguish the lines with different colors because the lines are already labeled; color would not be giving us any new information. I kept the blue color of the lines in order for them stand out when looking at the plot. 
+
+Is there anything more you wish you could do with this data? I think that it would be interesting to see what lap of the race has the most accidents/mechanical failures. 
+
+What were the most interesting or frustrating technical aspects of doing this? A key was not generated when I made the line plot. I thought it was odd that no labels for the lines were generated either. I had to do it manually.
+
+## Revisions
+```{r}
+new_data <- joined_results %>%
+  filter(status == "Mechanical" | status == "Accident" | status == "Engine" | status == "Brakes") %>%  # Filter by categories
+  group_by(status, year)
+```
+
+```{r}
+plot_ly(new_data, 
+               x = ~status, 
+               y = ~laps, 
+               type = 'box') %>% 
+  layout(title = "Spread of Failures over F1 Racing Laps",
+         xaxis = list(title = "Race status"),
+         yaxis = list (title = "Number of Laps"))
+```
+
+For my revision, I wanted to explore more details about when the failures occur. Also, I liked how Plotly's boxplots display information about each quartile of the boxplot. Hence, I made the revised plot above. 
