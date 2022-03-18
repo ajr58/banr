@@ -7,8 +7,8 @@ status <- read.csv("status.csv")
 results <- read_csv("results.csv", col_types = cols(number = col_character()))
 
 # join datasets
-F1racing <- dplyr::left_join(status, results, by='statusId') %>%
-  dplyr::left_join(races, results, by='raceId')
+F1racing <- left_join(status, results, by='statusId') %>%
+  left_join(races, results, by='raceId')
 
 # wrangle data
 status_data <- F1racing %>%
