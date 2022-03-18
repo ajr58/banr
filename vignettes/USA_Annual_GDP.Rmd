@@ -2,7 +2,7 @@
 title: "USA Annual GDP"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Global Diet Carbon Footprint}
+  %\VignetteIndexEntry{USA Annual GDP}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
