@@ -1,0 +1,179 @@
+---
+title: "USA Annual GDP"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Global Diet Carbon Footprint}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      fig.height = 5.5, fig.width = 9.5)
+```
+
+## Setup
+```{r libraries, message=FALSE, warning=FALSE}
+library(plotly)
+#library(banr)
+```
+
+## Import Data
+```{r import}
+# import data (from local .csv file)
+data <- read.csv("USA_GDP_Annual.csv")
+#data <- banr::USA_Annual_GDP
+```
+
+## Data Wrangling
+```{r wrangle1}
+# remove commas & convert columns of interest to numeric
+data$GDP <- as.numeric(gsub("," ,"" , data$GDP))
+data$Consumption <- as.numeric(gsub("," ,"" , data$Consumption))
+data$Investment <- as.numeric(gsub("," ,"" , data$Investment))
+data$Net.Exports <- as.numeric(gsub("," ,"" , data$Net.Exports))
+data$Government.Spending <- as.numeric(gsub("," ,"" , data$Government.Spending))
+```
+```{r wrangle2}
+# add proportion of each component to data frame
+# round each proportion to 5 digits
+data <- data %>% mutate(
+  Consumption.prop = Consumption / GDP,
+  Investment.prop = Investment / GDP,
+  Net.Exports.prop = Net.Exports / GDP,
+  Government.Spending.prop = Government.Spending / GDP,
+  Consumption.prop = round(Consumption.prop, 5),
+  Investment.prop = round(Investment.prop, 5),
+  Net.Exports.prop = round(Net.Exports.prop, 5),
+  Government.Spending.prop = round(Government.Spending.prop, 5)
+)
+```
+
+## Background Information
+The Gross Domestic Product (GDP) of a country has *four components*: private consumption (private spending on goods and services), investment, net exports (total exports minus total imports), and government spending (public spending on goods and services).
+
+On the second plot, each of the four components are shown for each year as a proportion of the whole GDP. For a given year, the four proportions *add up to one*.
+
+Notice that net exports is sometimes negative. This means that, in that year, the value of the imports into the USA was greater than the value of the exports out of the USA, otherwise known as a *trade deficit*.
+
+## Visualizations
+```{r plot1}
+# first plot
+# Nominal GDP by Year
+my_viz1 <- data %>%
+  plot_ly() %>%
+  # add GDP line
+  add_trace(x = ~Year, y = ~GDP, type = "scatter", mode = "lines", name = "Nominal GDP\nBy Year",
+         # fill under the curve
+         fill = "tozeroy", fillcolor = "rgba(168, 216, 234, 0.5)",
+         # customize tooltip
+         hovertemplate = '<b>Year</b>: %{x}<br><b>NGDP</b>: $%{y}<br><i>(value in millions of USD)</i>') %>%
+  # title, y-axis label, x-axis range slider
+  layout(title = list(text = "Nominal GDP by Year", font = list(size = 22), y = 0.99),
+         yaxis = list(title = "Nominal GDP (millions of USD)"),
+         xaxis = list(rangeslider = list(type = "date")))
+
+# display plot
+my_viz1
+```
+
+```{r plot2}
+# second plot
+# Components of Nominal GDP by Year
+my_viz2 <- data %>%
+  plot_ly() %>%
+  # add Consumption bars/lines
+  add_trace(type = "bar", x = ~Year, y = ~Consumption.prop, name = "Consumption", 
+            # customize tooltip
+            text = ~Consumption, textposition = "none",
+            hovertemplate = paste0('<b>Year</b>: %{x}<br><b>Proportion</b>: %{y:.4f}<br><b>Value</b>:',
+                                   ' $%{text}<br><i>(value in millions of USD)</i>')) %>%
+  # add Investment bars/lines
+  add_trace(type = "bar", x = ~Year, y = ~Investment.prop, name = "Investment", 
+            # customize tooltip
+            text = ~Investment, textposition = "none",
+            hovertemplate = paste0('<b>Year</b>: %{x}<br><b>Proportion</b>: %{y:.4f}<br><b>Value</b>:',
+                                   ' $%{text}<br><i>(value in millions of USD)</i>')) %>%
+  # add Net Exports bars/lines
+  add_trace(type = "bar", x = ~Year, y = ~Net.Exports.prop, name = "Net Exports", 
+            # customize tooltip
+            text = ~Net.Exports, textposition = "none",
+            hovertemplate = paste0('<b>Year</b>: %{x}<br><b>Proportion</b>: %{y:.4f}<br><b>Value</b>:',
+                                   ' $%{text}<br><i>(value in millions of USD)</i>')) %>%
+  # add Gov Spending bars/lines
+  add_trace(type = "bar", x = ~Year, y = ~Government.Spending.prop, name = "Government Spending",
+            # customize tooltip
+            text = ~Government.Spending, textposition = "none",
+            hovertemplate = paste0('<b>Year</b>: %{x}<br><b>Proportion</b>: %{y:.4f}<br><b>Value</b>:',
+                                   ' $%{text}<br><i>(value in millions of USD)</i>')) %>%
+  # title, y-axis label, x-axis range slider
+  layout(title = list(text = "Components of Nominal GDP by Year", font = list(size = 22), y = 0.99), 
+         yaxis = list(title = "Proportion of GDP"),
+         xaxis = list(rangeslider = list(type = "date")),
+         # add buttons for bar vs line
+         updatemenus = list(list(type = "buttons", direction = "right", x = 0.79, y = 0.98,
+                                 buttons = list(
+                                   list(method = "restyle", args = list("type", "bar"), 
+                                        label = "Bar Chart"),
+                                   list(method = "restyle", args = list("type", "lines"), 
+                                        label = "Line Chart")
+                                 ))),
+         # customize colors of the four traces
+         colorway = c("#5a46d2", "#b36b00", "#ff005a", "#32aa00"))
+
+# display plot
+my_viz2
+```
+
+```{r plot3}
+# third plot
+# Components of Nominal GDP by Year (Animated)
+my_viz3 <- data %>%
+  # add Consumption bar
+  plot_ly(type = "bar", y = ~Consumption.prop, name = "Consumption", frame = ~Year, 
+            # customize tooltip
+            hoverinfo = 'text', textposition = 'none',
+            text = ~paste('<b>Consumption</b><br><b>Proportion</b>: ', Consumption.prop, 
+                          '<br><b>Value</b>: $', Consumption, '<br><i>(value in millions of USD)</i>')) %>%
+  # add Investment bar
+  add_trace(type = "bar", y = ~Investment.prop, name = "Investment", 
+            # customize tooltip
+            hoverinfo = 'text', textposition = 'none',
+            text = ~paste('<b>Investment</b><br><b>Proportion</b>: ', Investment.prop, 
+                          '<br><b>Value</b>: $', Investment, '<br><i>(value in millions of USD)</i>')) %>%
+  # add Net Exports bar
+  add_trace(type = "bar", y = ~Net.Exports.prop, name = "Net Exports", 
+            # customize tooltip
+            hoverinfo = 'text', textposition = 'none',
+            text = ~paste('<b>Net Exports</b><br><b>Proportion</b>: ', Net.Exports.prop, 
+                          '<br><b>Value</b>: $', Net.Exports, '<br><i>(value in millions of USD)</i>')) %>%
+  # add Gov Spending bar
+  add_trace(type = "bar", y = ~Government.Spending.prop, name = "Government Spending",
+            # customize tooltip
+            hoverinfo = 'text', textposition = 'none',
+            text = ~paste('<b>Government Spending</b><br><b>Proportion</b>: ', Government.Spending.prop, 
+                          '<br><b>Value</b>: $', Government.Spending, '<br><i>(value in millions of USD)</i>')) %>%
+  # title, x-axis label, y-axis label
+  layout(title = list(text = "Components of Nominal GDP by Year (Animated)", font = list(size = 22), y = 0.99), 
+         xaxis = list(title = "Component of GDP", showticklabels = FALSE),
+         yaxis = list(title = "Proportion of GDP"),
+         # customize colors of the four traces
+         colorway = c("#5a46d2", "#b36b00", "#ff005a", "#32aa00")) %>%
+  # customize animation
+  animation_opts(250, redraw = FALSE) %>%
+  animation_slider(currentvalue = list(font = list(color = "dark gray")))
+
+# display plot
+my_viz3
+```
+
+## Data Source
+The data was collected by the United States *Bureau of Labor Statistics*. It was downloaded from the United States *Bureau of Economic Analysis* website, [here](https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2).
+
+## Reflection
+One idea from Wilke's book that I took into consideration was Chapter 10 on visualizing proportions. My original idea for this data was to show a pie chart for each year. However, I realized that that wouldn't be the best idea in this situation. I also considered using stacked bars instead of grouped bars. This was not feasible due to net exports being negative for many of the years.
+
+An additional thing that I would like to do with this data is to make similar visualizations for the real GDP, rather than just the nominal GDP. Real GDP adjusts the GDP for inflation because, of course, prices have increased signficantly since 1929, the first year of the data.
+
+One technical challenge that I had was creating the buttons. It was difficult to get them in the right spot and to have them change the right aspects of the plot. In general, placement of the different objects on the plot was a bit weird. The scale for *x* and *y* arguments in Plotly is [-2, 3]. I'd like to hear the rationale for that scale.
