@@ -18,7 +18,6 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(echo = TRUE)
 library(banr)
 library(tidyverse)
-library(ggridges)
 library(plotly)
 library(readxl)
 library(readr)

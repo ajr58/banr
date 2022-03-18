@@ -20,6 +20,11 @@ Imports:
 Suggests: 
     rmarkdown,
     knitr,
+    tidyverse,
+    plotly,
+    readxl,
+    readr,
+    dplyr,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
