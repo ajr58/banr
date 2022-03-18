@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(banr)
 library(tidyverse)
 library(ggridges)
 library(plotly)
@@ -26,6 +27,7 @@ library(readr)
 ```{r, include=FALSE}
 # Read in Data
 food_consumption <- read_csv("~/DATA-303/banr/data-raw/food_consumption.csv")
+food_consumption <- banr::food_consumption
 ```
 
 

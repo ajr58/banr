@@ -1,11 +1,10 @@
-#' @importFrom usethis use_data
-#' @importFrom readr read_csv write_csv
-#' @importFrom tidytuesdayR tt_load
-#' @importFrom dplyr group_by summarize mutate case_when arrange
+library(readr)
+library(tidytuesdayR)
+library(dplyr)
 
 if (file.exists("food_consumption.csv")) {
 
-  food_consumption <- read_csv("food_consumption.csv")
+  food_consumption <- readr::read_csv("food_consumption.csv")
 
 } else {
 
@@ -16,7 +15,7 @@ if (file.exists("food_consumption.csv")) {
 
   food_consumption <- tuesdata$food_consumption
 
-  write_csv(food_consumption, "food_consumption.csv")
+  readr::write_csv(food_consumption, "food_consumption.csv")
 
 }
 
