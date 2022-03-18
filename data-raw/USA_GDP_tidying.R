@@ -1,4 +1,4 @@
-#' @importFrom usethis use_data
+library(dplyr)
 
 # import data (from local .csv file)
 USA_Annual_GDP <- read.csv("USA_GDP_Annual.csv")
@@ -12,7 +12,7 @@ USA_Annual_GDP$Government.Spending <- as.numeric(gsub("," ,"" , USA_Annual_GDP$G
 
 # add proportion of each component to data frame
 # round each proportion to 5 digits
-USA_Annual_GDP <- USA_Annual_GDP %>% mutate(
+USA_Annual_GDP <- USA_Annual_GDP |> mutate(
   Consumption.prop = Consumption / GDP,
   Investment.prop = Investment / GDP,
   Net.Exports.prop = Net.Exports / GDP,
