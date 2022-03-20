@@ -69,16 +69,24 @@
 #' plot1 / plot2
 "food_consumption_total"
 
-#' Prices of 50,000 round cut diamonds.
+#' Annual GDP data for the USA.
 #'
-#' A dataset containing the prices and other attributes of almost 54,000
-#' diamonds.
+#' A dataset containing the annual nominal GDP for the USA, divided up into
+#' many categories (1929-2020).
 #'
-#' @format A data frame with 53940 rows and 10 variables:
+#' @format A data frame with 92 rows and 31 variables:
 #' \describe{
-#'   \item{price}{price, in US dollars}
-#'   \item{carat}{weight of the diamond, in carats}
+#'   \item{Year}{year}
+#'   \item{GDP}{total nominal GDP, in millions of dollars}
+#'   \item{Consumption}{total spent on goods/services, in millions of dollars}
+#'   \item{Investment}{total spent on investment, in millions of dollars}
+#'   \item{Government.Spending}{total spent by government, in millions of dollars}
+#'   \item{Net.Exports}{total exports minus total imports, in millions of dollars}
+#'   \item{Consumption.prop}{Consumption / GDP}
+#'   \item{Investment.prop}{Investment / GDP}
+#'   \item{Government.Spending.prop}{Government.Spending / GDP}
+#'   \item{Net.Exports.prop}{Net.Exports / GDP}
 #'   ...
 #' }
-#' @source \url{http://www.diamondse.info/}
+#' @source \url{https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2}
 "USA_Annual_GDP"
