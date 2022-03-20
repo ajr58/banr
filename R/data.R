@@ -53,6 +53,20 @@
 #'   ...
 #' }
 #' @source \url{https://www.nu3.de/blogs/nutrition/food-carbon-footprint-index-2018}
+#'
+#' @example
+#'
+#' library(ggplot2)
+#' library(patchwork)
+#' plot1 <- ggplot(food_consumption_total, aes(x = total_consumption, y = food_category, fill = food_type))
+#'  + geom_bar(stat="identity")
+#'   + scale_y_discrete(limits = positions)
+#'    + theme(legend.position = "top")
+#' plot2 <- plot2 <- ggplot(food_consumption_total, aes(x = total_emission, y = food_category, fill = food_type))
+#'  + geom_bar(stat="identity")
+#'  + scale_y_discrete(limits = positions)
+#'  + theme(legend.position = "none", axis.text.y = element_blank())
+#' plot1 / plot2
 "food_consumption_total"
 
 #' Prices of 50,000 round cut diamonds.
