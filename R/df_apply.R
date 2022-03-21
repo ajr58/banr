@@ -11,7 +11,6 @@
 #'
 #' @examples
 #'
-#' #library(banr)
 #' n <- 7L
 #' TestData <-
 #'    tibble::tibble(double = c(1.4, 2.4, 3.4, 4.4, 5.4, 6.4, 7.4),
@@ -20,9 +19,8 @@
 #'                character = LETTERS[1L:n],
 #'                factor = factor(letters[1L:n]),
 #'                logical = rep(c(TRUE, FALSE), length.out = n) )
-#' #banr::df_apply(TestData, .f = sqrt, .condition = is.numeric)
-#' #banr::df_apply(TestData2, .f = mean, .condition = is.numeric, .else = pracma::Mode)
-#' # function does not load quickly enough for the example to work
+#' df_apply(TestData, .f = sqrt, .condition = is.numeric)
+#' df_apply(TestData, .f = mean, .condition = is.numeric, .else = pracma::Mode)
 #'
 #' @importFrom tibble as_tibble
 

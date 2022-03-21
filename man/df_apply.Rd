@@ -34,8 +34,7 @@ TestData <-
                character = LETTERS[1L:n],
                factor = factor(letters[1L:n]),
                logical = rep(c(TRUE, FALSE), length.out = n) )
-#banr::df_apply(TestData, .f = sqrt, .condition = is.numeric)
-#banr::df_apply(TestData2, .f = mean, .condition = is.numeric, .else = pracma::Mode)
-# function does not load quickly enough for the example to work
+df_apply(TestData, .f = sqrt, .condition = is.numeric)
+df_apply(TestData, .f = mean, .condition = is.numeric, .else = pracma::Mode)
 
 }
