@@ -29,7 +29,7 @@
 #' }
 #' @source \url{https://www.nu3.de/blogs/nutrition/food-carbon-footprint-index-2018}
 #'
-#' @examples
+#' @example
 #'
 #' library(ggplot2)
 #' library(patchwork)
@@ -55,7 +55,7 @@
 #' }
 #' @source \url{https://www.nu3.de/blogs/nutrition/food-carbon-footprint-index-2018}
 #'
-#' @examples
+#' @example
 #'
 #' library(ggplot2)
 #' library(patchwork)
@@ -91,7 +91,7 @@
 #' }
 #' @source \url{https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2}
 #'
-#' @examples
+#' @example
 #'
 #' library(plotly)
 #' my_viz1 <- USA_Annual_GDP %>%

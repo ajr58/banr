@@ -25,7 +25,7 @@ Apply a function to columns of a data frame satisfying a condition
 }
 \examples{
 
-#devtools::install_github("ajr58/banr")
+#library(banr)
 n <- 7L
 TestData <-
    tibble::tibble(double = c(1.4, 2.4, 3.4, 4.4, 5.4, 6.4, 7.4),
