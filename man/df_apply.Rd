@@ -25,4 +25,7 @@ Apply a function to columns of a data frame satisfying a condition
 }
 \examples{
 
+df_apply(TestData, .f = sqrt, .condition = is.numeric)
+df_apply(TestData2, .f = mean, .condition = is.numeric, .else = pracma::Mode)
+
 }
