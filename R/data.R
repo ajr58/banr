@@ -94,7 +94,7 @@
 #' @examples
 #'
 #' library(plotly)
-#' my_viz1 <- data %>%
+#' my_viz1 <- USA_Annual_GDP %>%
 #' plot_ly() %>%
 #'   add_trace(x = ~Year, y = ~GDP, type = "scatter", mode = "lines", name = "Nominal GDP\nBy Year",
 #'             fill = "tozeroy", fillcolor = "rgba(168, 216, 234, 0.5)",

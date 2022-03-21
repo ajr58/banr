@@ -26,4 +26,14 @@ food_consumption_grouped
 A dataset containing the global consumption and carbon emissions of Animal
 and non-Animal products.
 }
+\examples{
+
+library(ggplot2)
+library(patchwork)
+plot1 <- ggplot(food_consumption_grouped, aes(fill=food_type, y=perc_consumption, x=`\% of Total`)) +
+    geom_bar(position="fill", stat="identity") + coord_flip()
+plot2 <- ggplot(food_consumption_grouped, aes(fill=food_type, y=perc_emission, x=`\% of Total`)) +
+    geom_bar(position="fill", stat="identity") + coord_flip()
+plot1 / plot2
+}
 \keyword{datasets}
