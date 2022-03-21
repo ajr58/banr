@@ -7,8 +7,9 @@
 \format{
 A data frame with 139 rows and 3 variables:
 \describe{
-\item{status}{finished or accident/mechanical failure}
+\item{status}{finished or accident/mechanical failure status of the race}
 \item{status_sum}{count of the statuses for a given year}
+\item{year}{year the race took place}
 ...
 }
 }
