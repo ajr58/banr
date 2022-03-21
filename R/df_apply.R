@@ -13,6 +13,7 @@
 #' @importFrom tibble as_tibble
 
 df_apply <- function(.data, .f, .condition = is.numeric, .else = identity, ...) {
+    if(mode(.condition(3)) != "logical") stop('.condition must return a logical type')
     .data |>
     lapply(function(x) if (.condition(x)) .f(x, ...) else .else(x)) |>
     as_tibble()

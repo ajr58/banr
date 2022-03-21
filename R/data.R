@@ -4,8 +4,9 @@
 #'
 #' @format A data frame with 139 rows and 3 variables:
 #' \describe{
-#'   \item{status}{finished or accident/mechanical failure}
+#'   \item{status}{finished or accident/mechanical failure status of the race}
 #'   \item{status_sum}{count of the statuses for a given year}
+#'   \item{year}{year the race took place}
 #'   ...
 #' }
 #' @source \url{http://ergast.com/mrd/db/#csv/}
@@ -53,6 +54,20 @@
 #'   ...
 #' }
 #' @source \url{https://www.nu3.de/blogs/nutrition/food-carbon-footprint-index-2018}
+#'
+#' @example
+#'
+#' library(ggplot2)
+#' library(patchwork)
+#' plot1 <- ggplot(food_consumption_total, aes(x = total_consumption, y = food_category, fill = food_type))
+#'  + geom_bar(stat="identity")
+#'   + scale_y_discrete(limits = positions)
+#'    + theme(legend.position = "top")
+#' plot2 <- plot2 <- ggplot(food_consumption_total, aes(x = total_emission, y = food_category, fill = food_type))
+#'  + geom_bar(stat="identity")
+#'  + scale_y_discrete(limits = positions)
+#'  + theme(legend.position = "none", axis.text.y = element_blank())
+#' plot1 / plot2
 "food_consumption_total"
 
 #' Annual GDP data for the USA.
