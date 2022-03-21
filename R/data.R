@@ -59,6 +59,7 @@
 #'
 #' library(ggplot2)
 #' library(patchwork)
+#' positions <- c('Soybeans', 'Nuts', 'Rice', 'Wheat', 'Lamb & Goat', 'Eggs', 'Beef', 'Pork', 'Fish', 'Poultry', 'Dairy')
 #' plot1 <- ggplot(food_consumption_total, aes(x = total_consumption, y = food_category, fill = food_type)) +
 #'  geom_bar(stat="identity") +
 #'  scale_y_discrete(limits = positions) +
