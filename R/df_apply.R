@@ -10,6 +10,9 @@
 #'
 #' @examples
 #'
+#' df_apply(TestData, .f = sqrt, .condition = is.numeric)
+#' df_apply(TestData2, .f = mean, .condition = is.numeric, .else = pracma::Mode)
+#'
 #' @importFrom tibble as_tibble
 
 df_apply <- function(.data, .f, .condition = is.numeric, .else = identity, ...) {
