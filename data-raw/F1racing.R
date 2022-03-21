@@ -1,5 +1,5 @@
-library(dplyr)
-library(tidyverse)
+require(dplyr)
+require(tidyverse)
 
 # import data
 races <- read.csv("races.csv")
