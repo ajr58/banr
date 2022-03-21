@@ -21,6 +21,8 @@
 #'                logical = rep(c(TRUE, FALSE), length.out = n) )
 #' df_apply(TestData, .f = sqrt, .condition = is.numeric)
 #' df_apply(TestData, .f = mean, .condition = is.numeric, .else = pracma::Mode)
+#' df_apply(USA_Annual_GDP, .f = round, .condition = is.numeric, .else = pracma::Mode, 3)
+#' df_apply(F1racing, .f = mean, .condition = is.numeric)
 #'
 #' @importFrom tibble as_tibble
 

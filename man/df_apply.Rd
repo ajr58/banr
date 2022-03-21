@@ -25,7 +25,6 @@ Apply a function to columns of a data frame satisfying a condition
 }
 \examples{
 
-#library(banr)
 n <- 7L
 TestData <-
    tibble::tibble(double = c(1.4, 2.4, 3.4, 4.4, 5.4, 6.4, 7.4),
@@ -36,5 +35,7 @@ TestData <-
                logical = rep(c(TRUE, FALSE), length.out = n) )
 df_apply(TestData, .f = sqrt, .condition = is.numeric)
 df_apply(TestData, .f = mean, .condition = is.numeric, .else = pracma::Mode)
+df_apply(USA_Annual_GDP, .f = round, .condition = is.numeric, .else = pracma::Mode, 3)
+df_apply(F1racing, .f = mean, .condition = is.numeric)
 
 }
