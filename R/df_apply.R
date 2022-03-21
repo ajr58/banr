@@ -7,6 +7,7 @@
 #' @param ... additional arguments to be passed to .f.
 #'
 #' @return A tibble with updated columns.
+#' @export
 #'
 #' @examples
 #'

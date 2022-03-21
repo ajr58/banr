@@ -24,21 +24,4 @@ food_consumption_total
 A dataset containing the global consumption and carbon emissions of
 different Food Groups
 }
-<<<<<<< HEAD
-\examples{
-
-library(ggplot2)
-library(patchwork)
-plot1 <- ggplot(food_consumption_total, aes(x = total_consumption, y = food_category, fill = food_type)) +
- geom_bar(stat="identity") +
- scale_y_discrete(limits = positions) +
- theme(legend.position = "top")
-plot2 <- plot2 <- ggplot(food_consumption_total, aes(x = total_emission, y = food_category, fill = food_type)) +
-geom_bar(stat="identity") +
-scale_y_discrete(limits = positions) +
-theme(legend.position = "none", axis.text.y = element_blank())
-plot1 / plot2
-}
-=======
->>>>>>> 4ac43872d9d46ca320a9120b0762d68d33f37332
 \keyword{datasets}
