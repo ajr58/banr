@@ -90,4 +90,18 @@
 #'   ...
 #' }
 #' @source \url{https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2}
+#'
+#' @example
+#'
+#' library(plotly)
+#' my_viz1 <- data %>%
+#' plot_ly() %>%
+#'   add_trace(x = ~Year, y = ~GDP, type = "scatter", mode = "lines", name = "Nominal GDP\nBy Year",
+#'             fill = "tozeroy", fillcolor = "rgba(168, 216, 234, 0.5)",
+#'             hovertemplate = '<b>Year</b>: %{x}<br><b>NGDP</b>: $%{y}<br><i>(value in millions of USD)</i>') %>%
+#'   layout(title = list(text = "Nominal GDP by Year", font = list(size = 22), y = 0.99),
+#'          yaxis = list(title = "Nominal GDP (millions of USD)"),
+#'          xaxis = list(rangeslider = list(type = "date")))
+#'
+#' my_viz1
 "USA_Annual_GDP"
